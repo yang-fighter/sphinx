@@ -64,9 +64,14 @@ def html_visit_displaymath(self: HTMLTranslator, node: nodes.math_block) -> None
     #     self.body.append(r'\end{aligned}\end{align} ')
     # self.body.append(self.builder.config.mathjax_display[1])
     # self.body.append('</div>\n')
-    self.body.append(self.builder.config.mathjax_display[0] +
+    self.body.append(self.starttag(node, 'p'))
+    if r'\begin' in self.encode(node.astext())[:7]:
+        self.body.append(self.encode(node.astext()))
+    else:
+        self.body.append(self.builder.config.mathjax_display[0] +
                     self.encode(node.astext()) +
                     self.builder.config.mathjax_display[1])
+    self.body.append('</p>')
     raise nodes.SkipNode
 
 
