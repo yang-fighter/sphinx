@@ -27,8 +27,11 @@ author = 'Yong Yang'
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions = ['sphinx.ext.mathjax'
+extensions = ['sphinx.ext.mathjax',
+'sphinxcontrib.tikz'
 ]
+
+tikz_proc_suite = 'pdf2svg'
 
 mathjax_config = '''
         loader: {load: ['a11y/semantic-enrich']},
@@ -66,6 +69,8 @@ rst_prolog = """
 
    <hr>
 """
+
+numfig = True
 
 # -- Options for HTML output -------------------------------------------------
 
