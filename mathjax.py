@@ -23,9 +23,8 @@ from sphinx.domains.math import MathDomain
 from sphinx.environment import BuildEnvironment
 from sphinx.errors import ExtensionError
 from sphinx.locale import _
-from sphinx.util.math import get_node_equation_number
+from sphinx.util.math import wrap_displaymath
 from sphinx.writers.html import HTMLTranslator
-
 
 def html_visit_math(self: HTMLTranslator, node: nodes.math) -> None:
     # self.body.append(self.starttag(node, 'span', '', CLASS='math notranslate nohighlight'))
@@ -36,6 +35,23 @@ def html_visit_math(self: HTMLTranslator, node: nodes.math) -> None:
 
 
 def html_visit_displaymath(self: HTMLTranslator, node: nodes.math_block) -> None:
+    
+    if node.get('label'):
+        label = "equation:%s:%s" % (node['docname'], node['label'])
+    else:
+        label = None
+    
+    self.body.append(self.starttag(node, 'div', CLASS='math notranslate nohighlight'))
+
+    if node.get('nowrap'):
+        if label:
+            self.body.append(r'\label{%s}' % label)
+        self.body.append(node.astext())
+    else:
+        self.body.append(wrap_displaymath(node.astext(), label, False))
+
+    self.body.append('</div>\n')
+    
     # self.body.append(self.starttag(node, 'div', CLASS='math notranslate nohighlight'))
     # if node['nowrap']:
     #     self.body.append(self.encode(node.astext()))
@@ -44,14 +60,14 @@ def html_visit_displaymath(self: HTMLTranslator, node: nodes.math_block) -> None
 
     # # necessary to e.g. set the id property correctly
     # if node['number']:
-    #     number = get_node_equation_number(self, node)
-    #     self.body.append('<span class="eqno">(%s)' % number)
-    #     self.add_permalink_ref(node, _('Permalink to this equation'))
-    #     self.body.append('</span>')
+    #     # number = get_node_equation_number(self, node)
+    #     # self.body.append('<span class="eqno">(%s)' % number)
+    #     # self.add_permalink_ref(node, _('Permalink to this equation'))
+    #     # self.body.append('</span>')
     # self.body.append(self.builder.config.mathjax_display[0])
     # parts = [prt for prt in node.astext().split('\n\n') if prt.strip()]
     # if len(parts) > 1:  # Add alignment if there are more than 1 equation
-    #     self.body.append(r' \begin{align}\begin{aligned}')
+    #     self.body.append(r' \begin{aligned}')
     # for i, part in enumerate(parts):
     #     part = self.encode(part)
     #     if r'\\' in part:
@@ -61,17 +77,12 @@ def html_visit_displaymath(self: HTMLTranslator, node: nodes.math_block) -> None
     #     if i < len(parts) - 1:  # append new line if not the last equation
     #         self.body.append(r'\\')
     # if len(parts) > 1:  # Add alignment if there are more than 1 equation
-    #     self.body.append(r'\end{aligned}\end{align} ')
+    #     self.body.append(r'\end{aligned} ')
     # self.body.append(self.builder.config.mathjax_display[1])
     # self.body.append('</div>\n')
-    self.body.append(self.starttag(node, 'p'))
-    if r'\begin' in self.encode(node.astext())[:7]:
-        self.body.append(self.encode(node.astext()))
-    else:
-        self.body.append(self.builder.config.mathjax_display[0] +
-                    self.encode(node.astext()) +
-                    self.builder.config.mathjax_display[1])
-    self.body.append('</p>')
+    # self.body.append(self.builder.config.mathjax_display[0] +
+    #                 self.encode(node.astext()) +
+    #                 self.builder.config.mathjax_display[1])
     raise nodes.SkipNode
 
 
@@ -109,7 +120,7 @@ def setup(app: Sphinx) -> Dict[str, Any]:
                          'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js', 'html')
     app.add_config_value('mathjax_options', {}, 'html')
     app.add_config_value('mathjax_inline', [r'\(', r'\)'], 'html')
-    app.add_config_value('mathjax_display', [r'\[', r'\]'], 'html')
+    app.add_config_value('mathjax_display', [r' \[', r' \]'], 'html')
     app.add_config_value('mathjax_config', None, 'html')
     app.connect('env-updated', install_mathjax)
 
