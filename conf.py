@@ -17,7 +17,7 @@
 
 # -- Project information -----------------------------------------------------
 
-project = 'My first Sphinx project'
+project = 'Linear Algebra'
 copyright = '2020, Yong Yang'
 author = 'Yong Yang'
 
@@ -28,7 +28,8 @@ author = 'Yong Yang'
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = ['sphinx.ext.mathjax',
-'sphinxcontrib.tikz'
+'sphinxcontrib.tikz',
+'sphinxcontrib.contentui'
 ]
 
 tikz_proc_suite = 'pdf2svg'
