@@ -30,7 +30,8 @@ author = 'Yong Yang'
 extensions = ['sphinx.ext.mathjax',
 'sphinxcontrib.tikz',
 'sphinxcontrib.contentui',
-'vlist'
+'sphinxcontrib.proof',
+'multicol'
 ]
 
 tikz_proc_suite = 'pdf2svg'
@@ -60,7 +61,7 @@ templates_path = ['_templates']
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
-exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
+exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store','_tex']
 
 # The name of the Pygments (syntax highlighting) style to use.
 pygments_style = 'sphinx'
