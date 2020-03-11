@@ -23,7 +23,7 @@ from sphinx.domains.math import MathDomain
 from sphinx.environment import BuildEnvironment
 from sphinx.errors import ExtensionError
 from sphinx.locale import _
-from sphinx.util.math import wrap_displaymath
+from sphinx.util.math import get_node_equation_number
 from sphinx.writers.html import HTMLTranslator
 
 def html_visit_math(self: HTMLTranslator, node: nodes.math) -> None:
@@ -33,25 +33,85 @@ def html_visit_math(self: HTMLTranslator, node: nodes.math) -> None:
                      self.builder.config.mathjax_inline[1])
     raise nodes.SkipNode
 
+def tag_displaymath(text: str, label: str, tag: str, numbering: bool) -> str:
+    def is_equation(part: str) -> str:
+        return part.strip()
+
+    if label is None:
+        labeldef = ''
+    else:
+        labeldef = r'\label{%s}' % label
+        numbering = True
+
+    if tag is None:
+        tagdef = ''
+    else:
+        tagdef = r'\tag{%s}' % tag
+        numbering = True
+
+    parts = list(filter(is_equation, text.split('\n\n')))
+    equations = []
+    if len(parts) == 0:
+        return ''
+    elif len(parts) == 1:
+        if numbering:
+            begin = r'\begin{equation}' + labeldef + tagdef 
+            end = r'\end{equation}'
+        else:
+            begin = r'\begin{equation*}' + labeldef + tagdef 
+            end = r'\end{equation*}'
+        equations.append('\\begin{split}%s\\end{split}\n' % parts[0])
+    else:
+        if numbering:
+            begin = r'\begin{align}%s %s\!\begin{aligned}' % (labeldef, tagdef)
+            end = r'\end{aligned}\end{align}'
+        else:
+            begin = r'\begin{align*}%s %s\!\begin{aligned}' % (labeldef, tagdef)
+            end = r'\end{aligned}\end{align*}'
+        for part in parts:
+            equations.append('%s\\\\\n' % part.strip())
+
+    return '%s\n%s%s' % (begin, ''.join(equations), end)
 
 def html_visit_displaymath(self: HTMLTranslator, node: nodes.math_block) -> None:
     
-    if node.get('label'):
+    if node.get('label') and node['number']:
         label = "equation:%s:%s" % (node['docname'], node['label'])
+        number = get_node_equation_number(self, node)
     else:
         label = None
+        number = None
     
     self.body.append(self.starttag(node, 'div', CLASS='math notranslate nohighlight'))
 
     if node.get('nowrap'):
         if label:
             self.body.append(r'\label{%s}' % label)
+        if number:
+            self.body.append(r'\tag{%s}' % label)
         self.body.append(node.astext())
     else:
-        self.body.append(wrap_displaymath(node.astext(), label, False))
+        self.body.append(tag_displaymath(node.astext(), label, number, False))
 
     self.body.append('</div>\n')
+
+    # if node.get('label'):
+    #     label = "equation:%s:%s" % (node['docname'], node['label'])
+    # else:
+    #     label = None
     
+    # self.body.append(self.starttag(node, 'div', CLASS='math notranslate nohighlight'))
+
+    # if node.get('nowrap'):
+    #     if label:
+    #         self.body.append(r'\label{%s}' % label)
+    #     self.body.append(node.astext())
+    # else:
+    #     self.body.append(wrap_displaymath(node.astext(), label, False))
+
+    # self.body.append('</div>\n')
+
+
     # self.body.append(self.starttag(node, 'div', CLASS='math notranslate nohighlight'))
     # if node['nowrap']:
     #     self.body.append(self.encode(node.astext()))
