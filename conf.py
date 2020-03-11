@@ -51,9 +51,14 @@ mathjax_config = '''
             }
         },
         tex: {
-            tags: 'ams'  // should be 'ams', 'none', or 'all'
+            tags: 'none'  // should be 'ams', 'none', or 'all'
         }
 '''
+
+numfig = True
+math_numfig = True
+numfig_secnum_depth = 1
+math_eqref_format = "Eq ({number})"
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -72,8 +77,6 @@ rst_prolog = """
 
    <hr>
 """
-
-numfig = True
 
 # -- Options for HTML output -------------------------------------------------
 
