@@ -1,0 +1,63 @@
+.proof {
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+
+.proof-title {
+  padding: 6px;
+  font-size: 120%;
+  color: white;
+}
+
+.proof-content p {
+  margin-bottom: 0px;
+}
+
+.proof-type-definition {
+  border: 1px solid #9fb1b4;
+}
+.proof-type-definition .proof-title {
+  background-color: #9fb1b4;
+}
+
+.proof-type-definition .proof-content {
+  padding: 1em 1em;
+}
+
+.proof-type-theorem {
+  border: 1px solid lightsalmon;
+}
+.proof-type-theorem .proof-title {
+  background-color: lightsalmon;
+}
+
+.proof-type-theorem .proof-content {
+  padding: 1em 1em;
+}
+
+.proof-type-example {
+  border: 1px solid #6ab0de;
+}
+
+.proof-type-example .proof-title {
+  background-color:#6ab0de;
+}
+
+.proof-type-example .proof-content {
+  padding: 6px;
+}
+
+
+/* Toggle proof */
+.proof-type-proof > .proof-title {
+    display: block;
+    clear: both;
+}
+
+.proof-type-proof > .proof-title:after {
+    content: " ▼";
+}
+
+.proof-type-proof > .proof-title.open:after {
+    content: " ▲";
+}

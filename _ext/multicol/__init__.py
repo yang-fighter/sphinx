@@ -41,8 +41,16 @@ def html_visit_multicol_node(self, node):
 def html_depart_multicol_node(self, node):
     self.body.append("</div>")
 
-def add_assets(app):
+def latex_visit_multicol_node(self, node):
+    self.body.append('\\begin{multicols}{%s}' % self.encode( str(node['columns'])).strip())
+    
+def latex_depart_multicol_node(self, node):
+    self.body.append('\\end{multicols}')
+
+def builder_inited(app):
     app.add_stylesheet(CSS_FILE)
+    if app.builder.name == "latex":
+        app.add_latex_package("multicol")
 
 def copy_assets(app, exception):
     if app.builder.name not in ['html', 'readthedocs'] or exception:
@@ -57,12 +65,13 @@ def copy_assets(app, exception):
 def setup(app):
 
     app.add_node(multicol,
-                 html=(html_visit_multicol_node, html_depart_multicol_node)
+                 html=(html_visit_multicol_node, html_depart_multicol_node),
+                 latex=(latex_visit_multicol_node, latex_depart_multicol_node)
                 )
 
     app.add_directive('multicol', MultiColDirective)
 
-    app.connect('builder-inited', add_assets)
+    app.connect('builder-inited', builder_inited)
     app.connect('build-finished', copy_assets)
 
     return {
