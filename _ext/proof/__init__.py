@@ -27,7 +27,7 @@ from docutils.statemachine import ViewList
 from sphinx.domains.std import StandardDomain
 from sphinx.domains import ObjType
 from sphinx.roles import XRefRole
-from sphinx.util import copy_static_entry
+# from sphinx.util import copy_static_entry
 from sphinx.util.docutils import SphinxDirective
 from sphinx.util.nodes import set_source_info, make_refnode, clean_astext
 from sphinx.util.osutil import copyfile
