@@ -61,10 +61,11 @@ from docutils import nodes, utils
 from docutils.parsers.rst import Directive, directives
 
 from sphinx.errors import SphinxError
+from errno import ENOENT
 try:
-    from sphinx.util.osutil import ensuredir, ENOENT
+    from sphinx.util.osutil import ensuredir
 except:
-    from sphinx.util import ensuredir, ENOENT
+    from sphinx.util import ensuredir
 
 from glob import glob
 
