@@ -329,8 +329,8 @@ def init_numfig_format(app, config):
     config.numfig_format = numfig_format
 
 def add_assets(app):
-    app.add_stylesheet(CSS_FILE)
-    app.add_javascript(JS_FILE)
+    app.add_css_file(CSS_FILE)
+    app.add_js_file(JS_FILE)
 
 def copy_assets(app, exception):
     if app.builder.name not in ['html', 'readthedocs'] or exception:
