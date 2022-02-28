@@ -48,7 +48,7 @@ def latex_depart_multicol_node(self, node):
     self.body.append('\\end{multicols}')
 
 def builder_inited(app):
-    app.add_stylesheet(CSS_FILE)
+    app.add_css_file(CSS_FILE)
     if app.builder.name == "latex":
         app.add_latex_package("multicol")
 
